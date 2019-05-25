@@ -15,12 +15,14 @@ class AverageRating extends PureComponent {
       }, 0) / reviews.length;
     const normalizedRating = Math.floor(rawRating * 2) / 2;
 
-    return <Rate defaultValue={normalizedRating} disabled />;
+    return <Rate defaultValue={normalizedRating} disabled allowHalf />;
   }
 }
 
 AverageRating.propTypes = {
-  reviews: PropTypes.arrayOf(PropTypes.object).isRequired
+  reviews: PropTypes.arrayOf(
+    PropTypes.shape({ rating: PropTypes.number.isRequired }).isRequired
+  ).isRequired
 };
 
 export default AverageRating;

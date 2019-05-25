@@ -3,8 +3,6 @@
 .App {
   min-height: 100%;
 }
-
-.map {
-  width: 500px;
-  height: 300px;
+.header {
+  text-align: right;
 }
