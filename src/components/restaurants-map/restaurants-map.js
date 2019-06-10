@@ -2,6 +2,13 @@ import React, { Component } from "react";
 import Leaflet from "leaflet";
 import * as PropTypes from "prop-types";
 import "./restaurant-map.css";
+import { connect } from "react-redux";
+import {
+  restaurantsLoadedSelector,
+  restaurantsLoadingSelector,
+  restaurantsSelector
+} from "../../selectors";
+import { loadRestaurants } from "../../ac";
 
 class RestaurantsMap extends Component {
   render() {
@@ -11,6 +18,9 @@ class RestaurantsMap extends Component {
     this.div = ref;
   };
   componentDidMount() {
+    if (!this.props.isRestaurantLoading && !this.props.isRestaurantLoaded) {
+      this.props.loadRestaurants();
+    }
     this.map = Leaflet.map(this.div, {
       center: [51.51847684708113, -0.13999606534701844],
       zoom: 12
@@ -20,22 +30,26 @@ class RestaurantsMap extends Component {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(this.map);
-
+  }
+  componentDidUpdate() {
+    this.renderTiles();
+  }
+  renderTiles = () => {
     this.props.restaurants.forEach(({ location: { lat, lng } }) => {
       Leaflet.marker([lat, lng]).addTo(this.map);
     });
-  }
+  };
 }
 
-RestaurantsMap.propTypes = {
-  restaurants: PropTypes.arrayOf(
-    PropTypes.shape({
-      location: PropTypes.shape({
-        lat: PropTypes.number.isRequired,
-        lng: PropTypes.number.isRequired
-      }).isRequired
-    })
-  ).isRequired
-};
-
-export default RestaurantsMap;
+export default connect(
+  state => (
+    {
+      restaurants: restaurantsSelector(state),
+      isRestaurantLoading: restaurantsLoadingSelector(state),
+      isRestaurantLoaded: restaurantsLoadedSelector(state)
+    },
+    {
+      loadRestaurants
+    }
+  )
+)(RestaurantsMap);
