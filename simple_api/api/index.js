@@ -23,6 +23,8 @@ router.get("/dishes", function(req, res, next) {
           return dish.id === dishId;
         });
       });
+    } else {
+      return reply(res, { error: "not found" }, 100, 404);
     }
   }
   reply(res, result);

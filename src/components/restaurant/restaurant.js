@@ -1,5 +1,4 @@
 import React, { PureComponent } from "react";
-import RestaurantMenu from "../restaurant-menu";
 import { List, Avatar, Button } from "antd";
 import AverageRating from "../average-rating";
 import ReviewList from "../review-list";
@@ -23,7 +22,6 @@ class Restaurant extends PureComponent {
       id,
       image,
       name,
-      isMenuOpen,
       isOpen: isReviewOpen,
       toggleVisibility
     } = this.props;
@@ -47,6 +45,9 @@ class Restaurant extends PureComponent {
               onClick={this.handleToggleOpenClick}
             >
               <NavLink to={`/restaurant-menu/${id}`}>Go to menu</NavLink>
+            </Button>,
+            <Button>
+              <NavLink to={`/restaurant-map/${id}`}>Show on map</NavLink>
             </Button>
           ]}
         >

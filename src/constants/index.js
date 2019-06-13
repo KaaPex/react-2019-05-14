@@ -18,6 +18,8 @@ export const LOAD_USERS = "LOAD_USERS";
 
 export const LOAD_DISHES = "LOAD_DISHES";
 
+export const SEND_ORDER = "SEND_ORDER";
+
 export const START = "_START";
 
 export const SUCCESS = "_SUCCESS";

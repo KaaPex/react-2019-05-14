@@ -22,6 +22,7 @@ export const usersLoadedSelector = state => state.users.loaded;
 
 export const dishesLoadingSelector = state => state.dishes.loading;
 export const dishesLoadedSelector = state => state.dishes.loaded;
+export const dishesErrorSelector = state => state.dishes.error;
 
 export const cartSelector = createSelector(
   cartMapSelector,

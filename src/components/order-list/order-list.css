@@ -6,3 +6,8 @@
 .order-item {
   padding: 18px;
 }
+.no-items {
+  text-align: center;
+  display: block;
+  padding: 12px;
+}

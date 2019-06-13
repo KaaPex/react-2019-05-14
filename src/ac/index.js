@@ -11,8 +11,11 @@ import {
   LOAD_DISHES,
   START,
   SUCCESS,
-  FAIL
+  FAIL,
+  SEND_ORDER
 } from "../constants";
+import { cartSelector } from "../selectors";
+import { push, replace } from "connected-react-router";
 
 export const increase = () => ({
   type: INCREMENT
@@ -65,10 +68,25 @@ export const loadUsers = () => ({
   callAPI: "http://localhost:3001/api/users"
 });
 
-export const loadDishes = () => ({
-  type: LOAD_DISHES,
-  callAPI: "http://localhost:3001/api/dishes"
-});
+export const loadDishes = id => (dispatch, getState) => {
+  const state = getState();
+  if (!state.dishes.loaded && !state.dishes.loading) {
+    dispatch({ type: LOAD_DISHES + START });
+    fetch(`http://localhost:3001/api/dishes?id=${id}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) {
+          dispatch({ type: LOAD_DISHES + FAIL, error: data.error });
+          dispatch(replace("/error"));
+        } else {
+          dispatch({ type: LOAD_DISHES + SUCCESS, response: data });
+        }
+      })
+      .catch(e => {
+        dispatch({ type: LOAD_DISHES + FAIL, error: e });
+      });
+  }
+};
 
 export const loadAllDataForReviews = () => (dispatch, getState) => {
   const state = getState();
@@ -91,5 +109,20 @@ export const loadAllDataForReviews = () => (dispatch, getState) => {
         dispatch({ type: LOAD_USERS + SUCCESS, response: data });
       })
       .catch(e => dispatch({ type: LOAD_USERS + FAIL, error: e }));
+  }
+};
+
+export const sendOrder = order => (dispatch, getState) => {
+  try {
+    dispatch({
+      type: SEND_ORDER,
+      payload: {
+        ...order,
+        dishes: cartSelector(getState())
+      }
+    });
+    dispatch(push("/order-complete"));
+  } catch (e) {
+    dispatch(push("/error"));
   }
 };

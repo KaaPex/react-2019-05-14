@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { Form, Input, Button } from "antd";
 import "./user-form.css";
+import { sendOrder } from "../../ac";
+import { connect } from "react-redux";
 
 class UserForm extends Component {
   state = {
@@ -46,6 +48,10 @@ class UserForm extends Component {
     this.setState({
       name: e.target.value
     });
+    this.props.setUser &&
+      this.props.setUser({
+        name: e.target.value
+      });
   };
 
   handlePhoneChange = e => {
@@ -62,8 +68,11 @@ class UserForm extends Component {
 
   submit = e => {
     e.preventDefault();
-    console.log(this.state);
+    this.props.sendOrder(this.state);
   };
 }
 
-export default UserForm;
+export default connect(
+  null,
+  { sendOrder }
+)(UserForm);
